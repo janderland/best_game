@@ -1,16 +1,16 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 # Enemy - Base class for hostile entities
 
 signal enemy_died(enemy_type)
 
-export var enemy_type = "shadow_lurker"
-export var health = 50.0
-export var max_health = 50.0
-export var damage = 10.0
-export var speed = 100.0
-export var detection_range = 300.0
-export var attack_range = 50.0
+@export var enemy_type = "shadow_lurker"
+@export var health = 50.0
+@export var max_health = 50.0
+@export var damage = 10.0
+@export var speed = 100.0
+@export var detection_range = 300.0
+@export var attack_range = 50.0
 
 var velocity = Vector2.ZERO
 var player_detected = false
@@ -25,8 +25,8 @@ var wander_direction = Vector2.ZERO
 var aggro_level = 0.0
 
 # Visual
-onready var sprite = $Sprite if has_node("Sprite") else null
-onready var collision_shape = $CollisionShape2D if has_node("CollisionShape2D") else null
+@onready var sprite = $Sprite if has_node("Sprite") else null
+@onready var collision_shape = $CollisionShape2D if has_node("CollisionShape2D") else null
 
 func _ready():
 	add_to_group("enemies")
@@ -61,7 +61,7 @@ func _physics_process(delta):
 		return
 
 	# Move
-	velocity = move_and_slide(velocity)
+	move_and_slide()
 
 	# Face movement direction
 	if sprite and velocity.length() > 10:
@@ -167,7 +167,7 @@ func forgotten_one_behavior(direction: Vector2, distance: float, _delta):
 	if randf() < 0.05:
 		# Freeze in place
 		velocity = Vector2.ZERO
-		yield(get_tree().create_timer(1.0), "timeout")
+		await get_tree().create_timer(1.0).timeout
 	else:
 		# Erratic movement
 		var erratic = Vector2(randf() - 0.5, randf() - 0.5).normalized()
@@ -227,7 +227,7 @@ func attack_player():
 	# Visual feedback
 	if sprite:
 		sprite.modulate = Color(1.5, 0.5, 0.5, 1.0)
-		yield(get_tree().create_timer(0.2), "timeout")
+		await get_tree().create_timer(0.2).timeout
 		if sprite:
 			sprite.modulate = Color(1, 1, 1, 1)
 
@@ -260,7 +260,7 @@ func take_damage(amount: float):
 	# Visual feedback
 	if sprite:
 		sprite.modulate = Color(1.5, 1.5, 1.5, 1.0)
-		yield(get_tree().create_timer(0.1), "timeout")
+		await get_tree().create_timer(0.1).timeout
 		if sprite:
 			sprite.modulate = Color(1, 1, 1, 1)
 
@@ -284,7 +284,7 @@ func die():
 		tween.interpolate_property(sprite, "modulate:a", 1.0, 0.0, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 		tween.interpolate_property(sprite, "scale", sprite.scale, Vector2.ZERO, 0.5, Tween.TRANS_CUBIC, Tween.EASE_IN)
 		tween.start()
-		yield(tween, "tween_all_completed")
+		await tween.finished
 
 	# Remove from scene
 	queue_free()
@@ -294,7 +294,7 @@ func stun(duration: float):
 	velocity = Vector2.ZERO
 	player_detected = false
 
-	yield(get_tree().create_timer(duration), "timeout")
+	await get_tree().create_timer(duration).timeout
 
 func knockback(direction: Vector2, force: float):
 	"""Apply knockback"""

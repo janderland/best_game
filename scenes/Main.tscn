@@ -1,71 +1,63 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://main_scene_001"]
 
-[ext_resource path="res://scripts/Main.gd" type="Script" id=1]
-[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://player_scene_001" path="res://scenes/Player.tscn" id="2"]
 
 [node name="Main" type="Node2D"]
-script = ExtResource( 1 )
+script = ExtResource("1")
 
-[node name="Player" parent="." instance=ExtResource( 2 )]
+[node name="Player" parent="." instance=ExtResource("2")]
 position = Vector2(640, 360)
 
 [node name="LevelContainer" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-current = true
+enabled = true
 zoom = Vector2(0.5, 0.5)
-smoothing_enabled = true
-smoothing_speed = 8.0
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="UI" type="Control" parent="CanvasLayer"]
-margin_right = 1280.0
-margin_bottom = 720.0
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HUD" type="VBoxContainer" parent="CanvasLayer/UI"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 310.0
-margin_bottom = 150.0
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 310.0
+offset_bottom = 150.0
 
 [node name="LevelLabel" type="Label" parent="CanvasLayer/UI/HUD"]
-margin_right = 300.0
-margin_bottom = 14.0
+layout_mode = 2
 text = "Level: 1 / 64"
 
 [node name="HealthBar" type="ProgressBar" parent="CanvasLayer/UI/HUD"]
-margin_top = 18.0
-margin_right = 300.0
-margin_bottom = 32.0
+layout_mode = 2
 value = 100.0
 
 [node name="HealthLabel" type="Label" parent="CanvasLayer/UI/HUD"]
-margin_top = 36.0
-margin_right = 300.0
-margin_bottom = 50.0
+layout_mode = 2
 text = "Health: 100 / 100"
 
 [node name="SanityBar" type="ProgressBar" parent="CanvasLayer/UI/HUD"]
-margin_top = 54.0
-margin_right = 300.0
-margin_bottom = 68.0
+layout_mode = 2
 value = 100.0
 
 [node name="SanityLabel" type="Label" parent="CanvasLayer/UI/HUD"]
-margin_top = 72.0
-margin_right = 300.0
-margin_bottom = 86.0
+layout_mode = 2
 text = "Sanity: 100 / 100"
 
 [node name="StatsLabel" type="Label" parent="CanvasLayer/UI/HUD"]
-margin_top = 90.0
-margin_right = 300.0
-margin_bottom = 104.0
+layout_mode = 2
 text = "Memories: 0"
 
 [node name="DevoteeLabel" type="Label" parent="CanvasLayer/UI/HUD"]
-margin_top = 108.0
-margin_right = 300.0
-margin_bottom = 122.0
+layout_mode = 2
 text = "The Devotee: Unknown"

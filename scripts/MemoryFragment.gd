@@ -5,12 +5,12 @@ extends Area2D
 var collected = false
 
 func _ready():
-	connect("body_entered", self, "_on_body_entered")
+	body_entered.connect(_on_body_entered)
 
 func _process(_delta):
 	# Gentle floating animation
 	if not collected:
-		position.y += sin(OS.get_ticks_msec() / 200.0) * 0.1
+		position.y += sin(Time.get_ticks_msec() / 200.0) * 0.1
 
 func _on_body_entered(body):
 	if collected:
@@ -41,15 +41,13 @@ func collect():
 	GameManager.collect_memory_fragment()
 
 	# Visual collection effect
-	var tween = Tween.new()
-	add_child(tween)
+	var tween = create_tween().set_parallel(true)
 
 	if has_node("Sprite"):
 		var sprite = get_node("Sprite")
-		tween.interpolate_property(sprite, "modulate:a", 1.0, 0.0, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
-		tween.interpolate_property(sprite, "scale", sprite.scale, sprite.scale * 2.0, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+		tween.tween_property(sprite, "modulate:a", 0.0, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(sprite, "scale", sprite.scale * 2.0, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
-	tween.start()
-	yield(tween, "tween_all_completed")
+	await tween.finished
 
 	queue_free()

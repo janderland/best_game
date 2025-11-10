@@ -11,7 +11,6 @@ func generate_player_sprite():
 	var img = Image.new()
 	img.create(size, size, false, Image.FORMAT_RGBA8)
 
-	img.lock()
 
 	var center = size / 2
 
@@ -36,7 +35,6 @@ func generate_player_sprite():
 				if abs(dx - size * 0.08) < size * 0.07 or abs(dx + size * 0.08) < size * 0.07:
 					img.set_pixel(x, y, Color(0.3, 0.7, 0.9, 1.0))
 
-	img.unlock()
 
 	var tex = ImageTexture.new()
 	tex.create_from_image(img)

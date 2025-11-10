@@ -5,10 +5,10 @@ extends Node2D
 signal level_complete()
 
 # Scene references
-onready var level_container = $LevelContainer if has_node("LevelContainer") else Node2D.new()
-onready var ui = $UI if has_node("UI") else null
-onready var player = $Player if has_node("Player") else null
-onready var level_generator = $LevelGenerator if has_node("LevelGenerator") else null
+@onready var level_container = $LevelContainer if has_node("LevelContainer") else Node2D.new()
+@onready var ui = $UI if has_node("UI") else null
+@onready var player = $Player if has_node("Player") else null
+@onready var level_generator = $LevelGenerator if has_node("LevelGenerator") else null
 
 # Current level instances
 var current_level = null
@@ -36,11 +36,11 @@ func _ready():
 		add_child(level_generator)
 
 	# Connect signals
-	GameManager.connect("level_changed", self, "_on_level_changed")
-	GameManager.connect("game_state_changed", self, "_on_game_state_changed")
+	GameManager.level_changed.connect(_on_level_changed)
+	GameManager.game_state_changed.connect(_on_game_state_changed)
 
 	if level_generator:
-		level_generator.connect("level_generated", self, "_on_level_generated")
+		level_generator.level_generated.connect(_on_level_generated)
 
 	# Start game
 	start_game()
@@ -177,7 +177,7 @@ func spawn_enemy(entity_data: Dictionary):
 	level_container.add_child(enemy)
 	current_entities.append(enemy)
 
-	enemy.connect("enemy_died", self, "_on_enemy_died")
+	enemy.enemy_died.connect(_on_enemy_died)
 
 func spawn_character(entity_data: Dictionary):
 	"""Spawn a character"""
@@ -227,8 +227,8 @@ func spawn_character(entity_data: Dictionary):
 	level_container.add_child(character)
 	current_entities.append(character)
 
-	character.connect("dialogue_started", self, "_on_dialogue_started")
-	character.connect("dialogue_ended", self, "_on_dialogue_ended")
+	character.dialogue_started.connect(_on_dialogue_started)
+	character.dialogue_ended.connect(_on_dialogue_ended)
 
 func spawn_memory_fragment(entity_data: Dictionary):
 	"""Spawn a collectible memory fragment"""
@@ -251,7 +251,6 @@ func spawn_memory_fragment(entity_data: Dictionary):
 	# Create simple texture
 	var img = Image.new()
 	img.create(32, 32, false, Image.FORMAT_RGBA8)
-	img.lock()
 	for y in range(32):
 		for x in range(32):
 			var dx = x - 16
@@ -260,7 +259,6 @@ func spawn_memory_fragment(entity_data: Dictionary):
 			if dist < 12:
 				var alpha = 1.0 - (dist / 12.0)
 				img.set_pixel(x, y, Color(0.9, 0.9, 1.0, alpha))
-	img.unlock()
 
 	var tex = ImageTexture.new()
 	tex.create_from_image(img)
@@ -295,7 +293,6 @@ func spawn_item(entity_data: Dictionary):
 
 	var img = Image.new()
 	img.create(24, 24, false, Image.FORMAT_RGBA8)
-	img.lock()
 	for y in range(24):
 		for x in range(24):
 			var dx = x - 12
@@ -303,7 +300,6 @@ func spawn_item(entity_data: Dictionary):
 			var dist = sqrt(dx * dx + dy * dy)
 			if dist < 10:
 				img.set_pixel(x, y, color)
-	img.unlock()
 
 	var tex = ImageTexture.new()
 	tex.create_from_image(img)
@@ -339,7 +335,7 @@ func advance_to_next_level():
 		GameManager.save_game()
 
 		# Generate next level
-		yield(get_tree().create_timer(2.0), "timeout")
+		await get_tree().create_timer(2.0).timeout
 		generate_current_level()
 		show_level_intro()
 	else:

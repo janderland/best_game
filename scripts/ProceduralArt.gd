@@ -80,7 +80,6 @@ func generate_texture_for_theme(theme: String, size: Vector2, seed_val: int = -1
 	var image = Image.new()
 	image.create(int(size.x), int(size.y), false, Image.FORMAT_RGBA8)
 
-	image.lock()
 
 	var palette = get_palette_for_theme(theme)
 
@@ -97,7 +96,6 @@ func generate_texture_for_theme(theme: String, size: Vector2, seed_val: int = -1
 		3:  # Memory fragments pattern
 			generate_fragment_pattern(image, palette)
 
-	image.unlock()
 	return image
 
 func get_palette_for_theme(theme: String) -> Array:
@@ -285,7 +283,6 @@ func generate_character_sprite(character_type: String, size: int = 64) -> Image:
 	var image = Image.new()
 	image.create(size, size, false, Image.FORMAT_RGBA8)
 
-	image.lock()
 
 	# Different appearance for each character type
 	match character_type:
@@ -304,7 +301,6 @@ func generate_character_sprite(character_type: String, size: int = 64) -> Image:
 		_:
 			generate_generic_sprite(image)
 
-	image.unlock()
 	return image
 
 func generate_devotee_sprite(image: Image):
@@ -457,7 +453,6 @@ func generate_enemy_sprite(enemy_type: String, size: int = 64) -> Image:
 	var image = Image.new()
 	image.create(size, size, false, Image.FORMAT_RGBA8)
 
-	image.lock()
 
 	match enemy_type:
 		"shadow_lurker":
@@ -473,7 +468,6 @@ func generate_enemy_sprite(enemy_type: String, size: int = 64) -> Image:
 		_:
 			generate_generic_enemy(image)
 
-	image.unlock()
 	return image
 
 func generate_shadow_lurker(image: Image):

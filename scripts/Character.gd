@@ -5,8 +5,8 @@ extends Area2D
 signal dialogue_started(character)
 signal dialogue_ended(character)
 
-export var character_type = "generic"
-export var character_name = "Echo"
+@export var character_type = "generic"
+@export var character_name = "Echo"
 
 var is_interactable = true
 var dialogue_active = false
@@ -14,8 +14,8 @@ var current_dialogue_index = 0
 var current_dialogue_options = []
 
 # Visual
-onready var sprite = $Sprite if has_node("Sprite") else null
-onready var label = $Label if has_node("Label") else null
+@onready var sprite = $Sprite if has_node("Sprite") else null
+@onready var label = $Label if has_node("Label") else null
 
 func _ready():
 	add_to_group("interactable")
@@ -92,7 +92,7 @@ func show_character_dialogue():
 	show_dialogue_text(dialogue)
 
 	# Auto-advance after delay
-	yield(get_tree().create_timer(3.0), "timeout")
+	await get_tree().create_timer(3.0).timeout
 	end_dialogue()
 
 func show_dialogue_text(dialogue: Dictionary):
@@ -111,7 +111,7 @@ func show_dialogue_text(dialogue: Dictionary):
 
 	# Handle The Devotee's special dialogue options
 	if character_type == "devotee":
-		yield(get_tree().create_timer(2.0), "timeout")
+		await get_tree().create_timer(2.0).timeout
 		show_devotee_response_options()
 
 func show_devotee_response_options():
@@ -124,7 +124,7 @@ func show_devotee_response_options():
 	print("5. [Leave] Walk away")
 
 	# For automation, randomly choose response
-	yield(get_tree().create_timer(1.0), "timeout")
+	await get_tree().create_timer(1.0).timeout
 	var choice = randi() % 5
 
 	match choice:
@@ -158,7 +158,7 @@ func handle_devotee_response(response_type: String):
 		"neutral":
 			print("The Devotee accepts your measured response...")
 
-	yield(get_tree().create_timer(2.0), "timeout")
+	await get_tree().create_timer(2.0).timeout
 	end_dialogue()
 
 func get_devotee_context() -> String:

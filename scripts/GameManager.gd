@@ -129,7 +129,7 @@ func player_death():
 	set_game_state(GameState.GAME_OVER)
 
 	# Respawn at current level after a delay
-	yield(get_tree().create_timer(2.0), "timeout")
+	await get_tree().create_timer(2.0).timeout
 	respawn_player()
 
 func respawn_player():
@@ -241,20 +241,25 @@ func save_game():
 		"game_seed": game_seed
 	}
 
-	var save_file = File.new()
-	save_file.open("user://echoes_save.dat", File.WRITE)
-	save_file.store_var(save_data)
-	save_file.close()
-	print("Game saved")
+	var save_file = FileAccess.open("user://echoes_save.dat", FileAccess.WRITE)
+	if save_file:
+		save_file.store_var(save_data)
+		save_file.close()
+		print("Game saved")
+	else:
+		print("Error saving game")
 
 func load_game() -> bool:
 	"""Load game state from file"""
-	var save_file = File.new()
-	if not save_file.file_exists("user://echoes_save.dat"):
+	if not FileAccess.file_exists("user://echoes_save.dat"):
 		print("No save file found")
 		return false
 
-	save_file.open("user://echoes_save.dat", File.READ)
+	var save_file = FileAccess.open("user://echoes_save.dat", FileAccess.READ)
+	if not save_file:
+		print("Error loading game")
+		return false
+
 	var save_data = save_file.get_var()
 	save_file.close()
 

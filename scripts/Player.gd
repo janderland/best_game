@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 # Player Controller - Handles player movement, interactions, and state
 
@@ -11,7 +11,6 @@ const SPEED = 200.0
 const ACCELERATION = 1000.0
 const FRICTION = 800.0
 
-var velocity = Vector2.ZERO
 var can_move = true
 var is_in_dialogue = false
 
@@ -20,20 +19,20 @@ var current_interaction_target = null
 var nearby_interactables = []
 
 # Visual components
-onready var sprite = $Sprite if has_node("Sprite") else null
-onready var animation_player = $AnimationPlayer if has_node("AnimationPlayer") else null
-onready var interaction_area = $InteractionArea if has_node("InteractionArea") else null
+@onready var sprite = $Sprite if has_node("Sprite") else null
+@onready var animation_player = $AnimationPlayer if has_node("AnimationPlayer") else null
+@onready var interaction_area = $InteractionArea if has_node("InteractionArea") else null
 
 func _ready():
 	print("Player initialized")
 
 	# Connect to game manager signals
-	GameManager.connect("game_state_changed", self, "_on_game_state_changed")
+	GameManager.game_state_changed.connect(_on_game_state_changed)
 
 	# Set up interaction area
 	if interaction_area:
-		interaction_area.connect("area_entered", self, "_on_interaction_area_entered")
-		interaction_area.connect("area_exited", self, "_on_interaction_area_exited")
+		interaction_area.area_entered.connect(_on_interaction_area_entered)
+		interaction_area.area_exited.connect(_on_interaction_area_exited)
 
 	update_health_display()
 	update_sanity_display()
@@ -50,7 +49,7 @@ func _process(_delta):
 func _physics_process(delta):
 	if not can_move or is_in_dialogue:
 		apply_friction(delta)
-		velocity = move_and_slide(velocity)
+		move_and_slide()
 		return
 
 	# Get input direction
@@ -62,8 +61,8 @@ func _physics_process(delta):
 	# Apply sanity-based movement instability
 	var stability = SanitySystem.get_movement_stability()
 	if stability < 1.0:
-		var noise_x = (randf() - 0.5) * (1.0 - stability) * 2.0
-		var noise_y = (randf() - 0.5) * (1.0 - stability) * 2.0
+		var noise_x = (randf_range(0.0, 1.0) - 0.5) * (1.0 - stability) * 2.0
+		var noise_y = (randf_range(0.0, 1.0) - 0.5) * (1.0 - stability) * 2.0
 		input_vector += Vector2(noise_x, noise_y)
 		input_vector = input_vector.normalized()
 
@@ -80,7 +79,7 @@ func _physics_process(delta):
 	else:
 		apply_friction(delta)
 
-	velocity = move_and_slide(velocity)
+	move_and_slide()
 
 	# Update animation based on movement
 	update_animation()
@@ -143,7 +142,7 @@ func flash_hurt():
 	"""Visual feedback for taking damage"""
 	if sprite:
 		sprite.modulate = Color(1, 0.3, 0.3, 1)
-		yield(get_tree().create_timer(0.1), "timeout")
+		await get_tree().create_timer(0.1).timeout
 		if sprite:
 			sprite.modulate = Color(1, 1, 1, 1)
 

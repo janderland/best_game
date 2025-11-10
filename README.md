@@ -92,8 +92,9 @@ Your ending depends on:
 
 ## 🏗️ Technical Features
 
-### Built with Godot 3.5
+### Built with Godot 4.3
 - **GDScript** - All game logic in Godot's native language
+- **Godot 4 engine** - Upgraded to latest Godot 4 with modern features
 - **Procedural generation** algorithms for levels and art
 - **Custom shaders** for sanity visual effects
 - **Modular architecture** for easy extension
@@ -122,7 +123,7 @@ Run tests with GDUnit4 framework (included).
 ## 🚀 Running the Game
 
 ### Requirements
-- Godot 3.5 or later
+- Godot 4.3 or later
 - ~50MB disk space
 
 ### Launch Instructions

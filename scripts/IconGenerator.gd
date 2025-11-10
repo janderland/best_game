@@ -8,7 +8,6 @@ static func generate_icon():
 	var img = Image.new()
 	img.create(size, size, false, Image.FORMAT_RGBA8)
 
-	img.lock()
 
 	# Background
 	for y in range(size):
@@ -37,7 +36,6 @@ static func generate_icon():
 			if sqrt((dx - 2) * (dx - 2) + (dy - 2) * (dy - 2)) < 2:
 				img.set_pixel(x, y, Color(0.9, 0.9, 1.0, 0.8))
 
-	img.unlock()
 
 	# Save as PNG
 	img.save_png("res://icon.png")
