@@ -82,12 +82,9 @@ func generate_appearance():
 		sprite.texture = tex
 
 		# Add subtle animation/bobbing
-		var tween = Tween.new()
-		add_child(tween)
-		tween.interpolate_property(sprite, "position:y", 0, -5, 1.0, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
-		tween.interpolate_property(sprite, "position:y", -5, 0, 1.0, Tween.TRANS_SINE, Tween.EASE_IN_OUT, 1.0)
-		tween.repeat = true
-		tween.start()
+		var tween = create_tween().set_loops()
+		tween.tween_property(sprite, "position:y", -5, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(sprite, "position:y", 0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func check_player_detection():
 	"""Check if player is in detection range"""
@@ -279,11 +276,9 @@ func die():
 
 	# Visual death effect
 	if sprite:
-		var tween = Tween.new()
-		add_child(tween)
-		tween.interpolate_property(sprite, "modulate:a", 1.0, 0.0, 0.5, Tween.TRANS_CUBIC, Tween.EASE_OUT)
-		tween.interpolate_property(sprite, "scale", sprite.scale, Vector2.ZERO, 0.5, Tween.TRANS_CUBIC, Tween.EASE_IN)
-		tween.start()
+		var tween = create_tween().set_parallel(true)
+		tween.tween_property(sprite, "modulate:a", 0.0, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(sprite, "scale", Vector2.ZERO, 0.5).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 		await tween.finished
 
 	# Remove from scene

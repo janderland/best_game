@@ -5,8 +5,7 @@ extends Node
 static func generate_icon():
 	"""Generate game icon"""
 	var size = 64
-	var img = Image.new()
-	img.create(size, size, false, Image.FORMAT_RGBA8)
+	var img = Image.create(size, size, false, Image.FORMAT_RGBA8)
 
 
 	# Background

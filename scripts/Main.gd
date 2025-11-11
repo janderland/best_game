@@ -170,7 +170,7 @@ func spawn_enemy(entity_data: Dictionary):
 	enemy.add_child(collision)
 
 	# Add sprite
-	var sprite_node = Sprite.new()
+	var sprite_node = Sprite2D.new()
 	sprite_node.name = "Sprite"
 	enemy.add_child(sprite_node)
 
@@ -212,7 +212,7 @@ func spawn_character(entity_data: Dictionary):
 	character.add_child(collision)
 
 	# Add sprite
-	var sprite_node = Sprite.new()
+	var sprite_node = Sprite2D.new()
 	sprite_node.name = "Sprite"
 	character.add_child(sprite_node)
 
@@ -245,12 +245,11 @@ func spawn_memory_fragment(entity_data: Dictionary):
 	fragment.add_child(collision)
 
 	# Visual - glowing orb
-	var sprite = Sprite.new()
+	var sprite = Sprite2D.new()
 	sprite.modulate = Color(0.8, 0.8, 1.0, 0.8)
 
 	# Create simple texture
-	var img = Image.new()
-	img.create(32, 32, false, Image.FORMAT_RGBA8)
+	var img = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	for y in range(32):
 		for x in range(32):
 			var dx = x - 16
@@ -287,12 +286,11 @@ func spawn_item(entity_data: Dictionary):
 	item.add_child(collision)
 
 	# Visual
-	var sprite = Sprite.new()
+	var sprite = Sprite2D.new()
 	var color = Color(0.2, 1.0, 0.3) if entity_data["item_type"] == "health" else Color(0.3, 0.6, 1.0)
 	sprite.modulate = color
 
-	var img = Image.new()
-	img.create(24, 24, false, Image.FORMAT_RGBA8)
+	var img = Image.create(24, 24, false, Image.FORMAT_RGBA8)
 	for y in range(24):
 		for x in range(24):
 			var dx = x - 12

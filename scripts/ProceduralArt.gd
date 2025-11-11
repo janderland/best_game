@@ -77,8 +77,7 @@ func generate_texture_for_theme(theme: String, size: Vector2, seed_val: int = -1
 	if seed_val >= 0:
 		rng.seed = seed_val
 
-	var image = Image.new()
-	image.create(int(size.x), int(size.y), false, Image.FORMAT_RGBA8)
+	var image = Image.create(int(size.x), int(size.y), false, Image.FORMAT_RGBA8)
 
 
 	var palette = get_palette_for_theme(theme)
@@ -280,8 +279,7 @@ func generate_noise(x: float, y: float, seed_val: int) -> float:
 
 func generate_character_sprite(character_type: String, size: int = 64) -> Image:
 	"""Generate a unique sprite for a character"""
-	var image = Image.new()
-	image.create(size, size, false, Image.FORMAT_RGBA8)
+	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
 
 
 	# Different appearance for each character type
@@ -450,8 +448,7 @@ func generate_generic_sprite(image: Image):
 
 func generate_enemy_sprite(enemy_type: String, size: int = 64) -> Image:
 	"""Generate enemy sprite based on type"""
-	var image = Image.new()
-	image.create(size, size, false, Image.FORMAT_RGBA8)
+	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
 
 
 	match enemy_type:

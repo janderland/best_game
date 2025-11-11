@@ -1,4 +1,4 @@
-extends Sprite
+extends Sprite2D
 
 # PlayerSprite - Generate player appearance
 
@@ -8,8 +8,7 @@ func _ready():
 func generate_player_sprite():
 	"""Generate a simple player sprite"""
 	var size = 48
-	var img = Image.new()
-	img.create(size, size, false, Image.FORMAT_RGBA8)
+	var img = Image.create(size, size, false, Image.FORMAT_RGBA8)
 
 
 	var center = size / 2
